@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 
 // ============================================================================
 // TODO Pertemuan 5 — MainScreen (soal #2 & #3 di Tugas Pertemuan 5)
@@ -140,6 +141,11 @@ fun MainScreen() {
                         type = NavType.IntType
                     }
                 ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "myapp://article/{itemId}"
+                    }
+                ),
                 enterTransition = {
                     slideInHorizontally { it } + fadeIn()
                 },
@@ -149,6 +155,7 @@ fun MainScreen() {
                 // TODO 3 (Tantangan): tambahkan parameter `deepLinks = listOf(...)`
                 // di sini — lihat contoh di komentar atas file.
             ) { backStackEntry ->
+
                 val itemId =
                     backStackEntry.arguments?.getInt("itemId") ?: 0
 
