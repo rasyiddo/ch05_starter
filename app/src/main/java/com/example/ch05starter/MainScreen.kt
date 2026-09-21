@@ -1,5 +1,9 @@
 package com.example.ch05starter
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -60,16 +64,16 @@ fun MainScreen() {
                 bottomNavItems.forEach { item ->
                     NavigationBarItem(
                         selected = currentRoute == item.route,
-                        onClick  = {
+                        onClick = {
                             navController.navigate(item.route) {
                                 popUpTo(Routes.Home.route) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
-                                restoreState    = true
+                                restoreState = true
                             }
                         },
-                        icon  = {
+                        icon = {
                             Icon(
                                 imageVector =
                                     if (currentRoute == item.route)
@@ -86,28 +90,73 @@ fun MainScreen() {
         }
     ) { innerPadding ->
         NavHost(
-            navController    = navController,
+            navController = navController,
             startDestination = Routes.Home.route,
-            modifier         = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding)
         ) {
             // TODO 2: tambahkan enterTransition/exitTransition di keempat
             // composable() di bawah ini (lihat contoh di komentar atas file).
-            composable(Routes.Home.route)    { HomeScreen(navController) }
-            composable(Routes.Explore.route) { ExploreScreen() }
-            composable(Routes.Profile.route) { ProfileScreen() }
 
             composable(
-                route     = Routes.Detail.route,
+                route = Routes.Home.route,
+                enterTransition = {
+                    slideInHorizontally { it } + fadeIn()
+                },
+                exitTransition = {
+                    slideOutHorizontally { -it } + fadeOut()
+                }
+            ) {
+                HomeScreen(navController)
+            }
+
+            composable(
+                route = Routes.Explore.route,
+                enterTransition = {
+                    slideInHorizontally { it } + fadeIn()
+                },
+                exitTransition = {
+                    slideOutHorizontally { -it } + fadeOut()
+                }
+            ) {
+                ExploreScreen()
+            }
+
+            composable(
+                route = Routes.Profile.route,
+                enterTransition = {
+                    slideInHorizontally { it } + fadeIn()
+                },
+                exitTransition = {
+                    slideOutHorizontally { -it } + fadeOut()
+                }
+            ) {
+                ProfileScreen()
+            }
+
+            composable(
+                route = Routes.Detail.route,
                 arguments = listOf(
-                    navArgument("itemId") { type = NavType.IntType }
-                )
+                    navArgument("itemId") {
+                        type = NavType.IntType
+                    }
+                ),
+                enterTransition = {
+                    slideInHorizontally { it } + fadeIn()
+                },
+                exitTransition = {
+                    slideOutHorizontally { -it } + fadeOut()
+                }
                 // TODO 3 (Tantangan): tambahkan parameter `deepLinks = listOf(...)`
                 // di sini — lihat contoh di komentar atas file.
             ) { backStackEntry ->
-                val itemId = backStackEntry.arguments?.getInt("itemId") ?: 0
+                val itemId =
+                    backStackEntry.arguments?.getInt("itemId") ?: 0
+
                 DetailScreen(
                     itemId = itemId,
-                    onBack = { navController.popBackStack() }
+                    onBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }
